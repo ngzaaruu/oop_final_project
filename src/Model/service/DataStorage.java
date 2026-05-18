@@ -22,10 +22,11 @@ public class DataStorage implements Serializable {
     private List<Journal> journals = new ArrayList<>();
     private List<ResearchPaper> papers = new ArrayList<>();
     private List<OfficialMessage> officialMessages = new ArrayList<>();
+    private List<String> systemLogs = new ArrayList<>();
 
     private DataStorage() {}
 
-    public static DataStorage getInstance() {
+    public static synchronized DataStorage getInstance() {
         if (instance == null) {
             instance = new DataStorage();
         }
@@ -33,6 +34,7 @@ public class DataStorage implements Serializable {
     }
 
     public void addUser(User user) {
+        ensureLists();
         if (user != null && !users.contains(user)) {
             users.add(user);
         }
@@ -42,9 +44,38 @@ public class DataStorage implements Serializable {
         users.remove(user);
     }
 
-    public List<User> getUsers() { return users; }
+    public boolean removeUserById(int id) {
+        ensureLists();
+        User user = findUserById(String.valueOf(id));
+        if (user == null) {
+            return false;
+        }
+        users.remove(user);
+        return true;
+    }
+
+    public boolean updateUser(User updatedUser) {
+        ensureLists();
+        if (updatedUser == null) {
+            return false;
+        }
+
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getId() == updatedUser.getId()) {
+                users.set(i, updatedUser);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<User> getUsers() {
+        ensureLists();
+        return new ArrayList<>(users);
+    }
 
     public User findUserById(String id) {
+        ensureLists();
         if (id == null) return null;
         for (User user : users) {
             if (String.valueOf(user.getId()).equals(id)) {
@@ -55,6 +86,7 @@ public class DataStorage implements Serializable {
     }
 
     public User findUserByEmail(String email) {
+        ensureLists();
         if (email == null) return null;
         for (User user : users) {
             if (email.equalsIgnoreCase(user.getEmail())) {
@@ -111,7 +143,30 @@ public class DataStorage implements Serializable {
         return officialMessages;
     }
 
+    public void addSystemLog(String log) {
+        ensureLists();
+        if (log != null && !log.isEmpty()) {
+            systemLogs.add(log);
+        }
+    }
+
+    public List<String> getSystemLogs() {
+        ensureLists();
+        return new ArrayList<>(systemLogs);
+    }
+
+    private void ensureLists() {
+        if (users == null) users = new ArrayList<>();
+        if (courses == null) courses = new ArrayList<>();
+        if (newsList == null) newsList = new ArrayList<>();
+        if (journals == null) journals = new ArrayList<>();
+        if (papers == null) papers = new ArrayList<>();
+        if (officialMessages == null) officialMessages = new ArrayList<>();
+        if (systemLogs == null) systemLogs = new ArrayList<>();
+    }
+
     public void save(String filename) {
+        ensureLists();
         if (filename == null || filename.isEmpty()) {
             throw new IllegalArgumentException("Filename cannot be empty");
         }
