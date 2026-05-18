@@ -1,0 +1,7 @@
+package Model.enums;
+
+public enum UserType {
+    STUDENT, GRADUATE_STUDENT, TEACHER, ADMIN,
+    MANAGER, LIBRARIAN, TECH_SUPPORT_SPECIALIST, RESEARCHER
+}
+
