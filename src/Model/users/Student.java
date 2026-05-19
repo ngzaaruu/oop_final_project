@@ -9,7 +9,8 @@ import java.util.*;
 
 public class Student extends User implements Researcher {
 
-    protected String studentId;
+    private static final long serialVersionUID = 1L;
+	protected String studentId;
     protected String major;
     protected int yearOfStudy;
     protected double gpa;
@@ -300,5 +301,10 @@ public class Student extends User implements Researcher {
     public int getYearOfStudy() {
         return yearOfStudy;
     }
+
+	public String getSchedule() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 

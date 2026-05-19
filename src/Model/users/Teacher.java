@@ -14,7 +14,8 @@ import java.util.*;
 
 public class Teacher extends Employee implements Researcher {
 
-    private String teacherId;
+    private static final long serialVersionUID = 1L;
+	private String teacherId;
     private TeacherPosition position;
 
     private List<Course> courses;
@@ -76,11 +77,14 @@ public class Teacher extends Employee implements Researcher {
         super.sendMessage(receiver, text); 
     }
 
-    public void viewCourses() {
+    public List<Course> viewCourses() {
         for (Course c : courses) {
             System.out.println(c.getName());
         }
+        return courses;
     }
+
+   
 
     public void manageCourse(Course course, String newName, int newCredits) {
         if (course == null) {
